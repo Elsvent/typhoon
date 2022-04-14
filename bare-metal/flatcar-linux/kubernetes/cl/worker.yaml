@@ -3,11 +3,11 @@ systemd:
   units:
     - name: docker.service
       enabled: true
-    %{ if integrated_with_longhorn == true }
+    %{ if integrated_with_longhorn == true ~}
     - name: iscsid.service
       enabled: true
-    %{ else }
-    %{ endif }
+    %{ else ~}
+    %{ endif ~}
     - name: locksmithd.service
       mask: true
     - name: kubelet.path
@@ -55,12 +55,12 @@ systemd:
           --privileged \
           --pid host \
           --network host \
-          %{ if integrated_with_longhorn == true }
+          %{ if integrated_with_longhorn == true ~}
           -v /usr/sbin/iscsiadm:/usr/sbin/iscsiadm \
           -v /usr/sbin/iscsid:/usr/sbin/iscsid \
           -v /etc/iscsi/:/etc/iscsi/ \
-          %{ else }
-          %{ endif }
+          %{ else ~}
+          %{ endif ~}
           -v /etc/cni/net.d:/etc/cni/net.d:ro \
           -v /etc/kubernetes:/etc/kubernetes:ro \
           -v /etc/machine-id:/etc/machine-id:ro \
