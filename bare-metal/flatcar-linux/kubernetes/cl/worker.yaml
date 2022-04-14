@@ -3,7 +3,7 @@ systemd:
   units:
     - name: docker.service
       enabled: true
-    %{ if integrated_with_longhorn == true ~}
+    %{ if integrated_with_longhorn ~}
     <<EOT
     - name: iscsid.service
       enabled: true
@@ -38,8 +38,8 @@ systemd:
       contents: |
         [Unit]
         Description=Kubelet
-        Requires=docker.service %{ if integrated_with_longhorn == true }"iscsid.service"%{ else }%{ endif }
-        After=docker.service %{ if integrated_with_longhorn == true }"iscsid.service"%{ else }%{ endif }
+        Requires=docker.service %{ if integrated_with_longhorn }"iscsid.service"%{ else }%{ endif }
+        After=docker.service %{ if integrated_with_longhorn }"iscsid.service"%{ else }%{ endif }
         Wants=rpc-statd.service
         [Service]
         Environment=KUBELET_IMAGE=quay.io/poseidon/kubelet:v1.23.5
@@ -57,7 +57,7 @@ systemd:
           --privileged \
           --pid host \
           --network host \
-          %{ if integrated_with_longhorn == true ~}
+          %{ if integrated_with_longhorn ~}
           <<EOT
           -v /usr/sbin/iscsiadm:/usr/sbin/iscsiadm \
           -v /usr/sbin/iscsid:/usr/sbin/iscsid \
