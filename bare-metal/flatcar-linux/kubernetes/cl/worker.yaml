@@ -4,8 +4,10 @@ systemd:
     - name: docker.service
       enabled: true
     %{ if integrated_with_longhorn == true ~}
-    "- name: iscsid.service
-      enabled: true"
+    <<EOT
+    - name: iscsid.service
+      enabled: true
+    EOT
     %{ else ~}
     %{ endif ~}
     - name: locksmithd.service
@@ -56,9 +58,11 @@ systemd:
           --pid host \
           --network host \
           %{ if integrated_with_longhorn == true ~}
-          "-v /usr/sbin/iscsiadm:/usr/sbin/iscsiadm \
+          <<EOT
+          -v /usr/sbin/iscsiadm:/usr/sbin/iscsiadm \
           -v /usr/sbin/iscsid:/usr/sbin/iscsid \
-          -v /etc/iscsi/:/etc/iscsi/ \ "
+          -v /etc/iscsi/:/etc/iscsi/ \
+          EOT
           %{ else ~}
           %{ endif ~}
           -v /etc/cni/net.d:/etc/cni/net.d:ro \
