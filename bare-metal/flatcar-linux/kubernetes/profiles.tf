@@ -132,6 +132,7 @@ data "template_file" "worker-configs" {
   template = file("${path.module}/cl/worker.yaml")
 
   vars = {
+    integrated_with_longhorn = var.integrated_with_longhorn
     domain_name            = var.workers.*.domain[count.index]
     cluster_dns_service_ip = module.bootstrap.cluster_dns_service_ip
     cluster_domain_suffix  = var.cluster_domain_suffix
