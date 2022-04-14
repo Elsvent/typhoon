@@ -4,10 +4,7 @@ systemd:
     - name: docker.service
       enabled: true
     %{ if integrated_with_longhorn ~}
-    <<EOT
-    - name: iscsid.service
-      enabled: true
-    EOT
+    yamlencode([{name:iscsid.service, enabled:true}])
     %{ else ~}
     %{ endif ~}
     - name: locksmithd.service
