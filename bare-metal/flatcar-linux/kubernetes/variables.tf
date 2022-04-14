@@ -155,6 +155,12 @@ variable "enable_aggregation" {
   default     = true
 }
 
+variable "integrated_with_longhorn" {
+  type        = bool
+  description = "integrated with longhorn"
+  default     = false
+}
+
 # unofficial, undocumented, unsupported
 
 variable "cluster_domain_suffix" {
