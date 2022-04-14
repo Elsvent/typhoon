@@ -3,6 +3,11 @@ systemd:
   units:
     - name: docker.service
       enabled: true
+    %{ if integrated_with_longhorn == true }
+    - name: iscsid.service
+      enabled: true
+    %{ else }
+    %{ endif }
     - name: locksmithd.service
       mask: true
     - name: kubelet.path
@@ -31,8 +36,8 @@ systemd:
       contents: |
         [Unit]
         Description=Kubelet
-        Requires=docker.service
-        After=docker.service
+        Requires=docker.service %{ if integrated_with_longhorn == true }iscsid.service%{ else }%{ endif }
+        After=docker.service %{ if integrated_with_longhorn == true }iscsid.service%{ else }%{ endif }
         Wants=rpc-statd.service
         [Service]
         Environment=KUBELET_IMAGE=quay.io/poseidon/kubelet:v1.24.2
@@ -50,6 +55,12 @@ systemd:
           --privileged \
           --pid host \
           --network host \
+          %{ if integrated_with_longhorn == true }
+          -v /usr/sbin/iscsiadm:/usr/sbin/iscsiadm \
+          -v /usr/sbin/iscsid:/usr/sbin/iscsid \
+          -v /etc/iscsi/:/etc/iscsi/ \
+          %{ else }
+          %{ endif }
           -v /etc/cni/net.d:/etc/cni/net.d:ro \
           -v /etc/kubernetes:/etc/kubernetes:ro \
           -v /etc/machine-id:/etc/machine-id:ro \
