@@ -3,10 +3,8 @@ systemd:
   units:
     - name: docker.service
       enabled: true
-    %{ if integrated_with_longhorn ~}
-    yamlencode([{name:iscsid.service, enabled:true}])
-    %{ else ~}
-    %{ endif ~}
+    - name: iscsid.service
+      enabled: true
     - name: locksmithd.service
       mask: true
     - name: kubelet.path
@@ -54,14 +52,9 @@ systemd:
           --privileged \
           --pid host \
           --network host \
-          %{ if integrated_with_longhorn ~}
-          <<EOT
           -v /usr/sbin/iscsiadm:/usr/sbin/iscsiadm \
           -v /usr/sbin/iscsid:/usr/sbin/iscsid \
           -v /etc/iscsi/:/etc/iscsi/ \
-          EOT
-          %{ else ~}
-          %{ endif ~}
           -v /etc/cni/net.d:/etc/cni/net.d:ro \
           -v /etc/kubernetes:/etc/kubernetes:ro \
           -v /etc/machine-id:/etc/machine-id:ro \
