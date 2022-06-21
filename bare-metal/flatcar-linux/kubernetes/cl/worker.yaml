@@ -33,8 +33,8 @@ systemd:
       contents: |
         [Unit]
         Description=Kubelet
-        Requires=docker.service %{ if integrated_with_longhorn == true }iscsid.service%{ else }%{ endif }
-        After=docker.service %{ if integrated_with_longhorn == true }iscsid.service%{ else }%{ endif }
+        Requires=docker.service %{ if integrated_with_longhorn == true }"iscsid.service"%{ else }%{ endif }
+        After=docker.service %{ if integrated_with_longhorn == true }"iscsid.service"%{ else }%{ endif }
         Wants=rpc-statd.service
         [Service]
         Environment=KUBELET_IMAGE=quay.io/poseidon/kubelet:v1.23.5
